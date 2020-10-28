@@ -1,31 +1,43 @@
 from fastapi import APIRouter, HTTPException
 import pandas as pd
-from .update import backlog_path
+import numpy as np
+# from .update import backlog_path  # Use this when able to get the backlog.csv filled correctly
 from ast import literal_eval
+import os
+import json
+import ast
 
 router = APIRouter()
-
 
 @router.get('/getdata')
 async def getdata():
     '''
-    Get data from backlog database.
+    Get jsonified dataset from all_sources_geoed.csv
     '''
-    try:
-        with open(backlog_path) as f:
-            pass  # file can be opened successfully
-        # load backlog and return it
-        backlog = pd.read_csv(
-            backlog_path,
-            converters={
-                'links': literal_eval,
-                'geocoding': literal_eval
-            }
-        )
-        return backlog.to_json(orient='records')
-    except IOError:
-        # file cannot be opened successfully and needs to be created
-        return HTTPException(
-            404,
-            'Backlog has not been created yet or cannot be found, please run /update first.'
-        )
+
+    # Path to dataset used in our endpoint
+    locs_path = os.path.join(os.path.dirname(
+        __file__), '..', '..', 'all_sources_geoed.csv')
+
+    router = APIRouter()
+
+    df = pd.read_csv(locs_path)
+    # Fix issue where "Unnamed: 0" created when reading in the dataframe
+    df = df.drop(columns="Unnamed: 0")
+
+    # Removes the string type output from columns src and tags, leaving them as arrays for easier use by backend
+    for i in range(len(df)):
+        df['src'][i] = ast.literal_eval(df['src'][i])
+        df['tags'][i] = ast.literal_eval(df['tags'][i])
+
+
+    """
+    Convert data to useable json format
+    ### Response
+    dateframe: JSON object
+    """
+    # Initial conversion to json - use records to jsonify by instances (rows)
+    result = df.to_json(orient="records")
+    # Parse the jsonified data removing instances of '\"' making it difficult for backend to collect the data
+    parsed = json.loads(result.replace('\"', '"'))
+    return parsed

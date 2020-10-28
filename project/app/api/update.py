@@ -18,21 +18,24 @@ from dotenv import load_dotenv
 # router for fastapi
 router = APIRouter()
 
-# geolocation data
+# geolocation dataset; useful for creating location and geolocation data
 locs_path = os.path.join(os.path.dirname(
     __file__), '..', '..', 'cities_states.csv')
 locs_df = pd.read_csv(locs_path)
 
-
+# Sets all text to lowercase to avoid any case differences
 def lowerify(text):
     # fix up geolocation dataframe a little
     return text.lower()
 
-
+# Drop Unnamed: 0 column and 'country' column
 locs_df = locs_df.drop(columns=['Unnamed: 0', 'country'])
+# Apply lowerify function to all city names
 locs_df['city_ascii'] = locs_df['city_ascii'].apply(lowerify)
+# Apply lowerify function to all state names
 locs_df['admin_name'] = locs_df['admin_name'].apply(lowerify)
 
+# Create state/city mapper
 states_map = {}
 # for each state, map their respective cities
 for state in list(locs_df.admin_name.unique()):
@@ -41,12 +44,12 @@ for state in list(locs_df.admin_name.unique()):
 
 # police brutality indentifying nlp
 model_path = os.path.join(os.path.dirname(
-    __file__), '..', '..', 'model.pkl')
+    __file__), '..', '..', 'hrfc_rfmodel_v1.pkl')
 model_file = open(model_path, 'rb')
 pipeline = pickle.load(model_file)
 model_file.close()
 
-# local csv backlog path
+# local csv backlog path used to save the newly pulled in data
 backlog_path = os.path.join(os.path.dirname(
     __file__), '..', '..', 'backlog.csv'
 )
@@ -56,27 +59,27 @@ nlp = spacy.load('en_core_web_sm')
 
 load_dotenv()
 
-# globalize these variables because I need to
-
-PRAW_CLIENT_ID = os.getenv('PRAW_CLIENT_ID')
-PRAW_CLIENT_SECRET = os.getenv('PRAW_CLIENT_SECRET')
-PRAW_USER_AGENT = os.getenv('PRAW_USER_AGENT')
-
-
 @router.get('/update')
 async def update():
     '''
     Update backlog database with data from reddit.
     '''
+
+    # globalize these variables because I need to
+    PRAW_CLIENT_ID = os.getenv('PRAW_CLIENT_ID')
+    PRAW_CLIENT_SECRET = os.getenv('PRAW_CLIENT_SECRET')
+    PRAW_USER_AGENT =  os.getenv('PRAW_USER_AGENT')
+
     reddit = praw.Reddit(
-        client_id= PRAW_CLIENT_ID,
-        client_secret= PRAW_CLIENT_SECRET,
-        user_agent= PRAW_USER_AGENT
+        client_id=PRAW_CLIENT_ID,
+        client_secret=PRAW_CLIENT_SECRET,
+        user_agent=PRAW_USER_AGENT
     )
     # Grab data from reddit
     data = []
+    # Pull from reddit using the format: reddit.subreddit(<subreddit name>).<sort posts by keyword>(limit=<number of posts that you want to pull>)
     for submission in reddit.subreddit("news").hot(limit=100):
-        data.append([submission.id, submission.title, submission.url])
+        data.append([submission.id, submission.title, submission.url])  # Append the post's id, title, and url to a list within the data list
     # construct a dataframe with the data
     col_names = ['id', 'title', 'url']
     df = pd.DataFrame(data, columns=col_names)
@@ -103,11 +106,6 @@ async def update():
     df['text'] = content_list
     df['date'] = date_list
 
-    # drop any articles with missing data columns
-    df = df.dropna()
-    df = df.reset_index()
-    df = df.drop(columns='index')
-
     # use NLP model to filter posts
     df['is_police_brutality'] = pipeline.predict(df['title'])
     df = df[df['is_police_brutality'] == 1]
@@ -124,13 +122,11 @@ async def update():
     # figure out which city and state the article takes place in
     city_list = []
     state_list = []
-    geo_list = []
+    lat_list = []
+    long_list = []
     for tokens in df['tokens']:
         # set up Counter
         c = Counter(tokens)
-
-        # set up geolocation dict for geo list
-        geo_entry = {'lat': None, 'long': None}
 
         # count which states come back the most, if any
         state_counts = {}
@@ -153,7 +149,8 @@ async def update():
         if max_state is None:
             city_list.append(None)
             state_list.append(None)
-            geo_list.append(geo_entry)
+            lat_list.append(None)
+            long_list.append(None)
             continue
 
         max_city = None
@@ -176,7 +173,8 @@ async def update():
         if max_city is None:
             city_list.append(None)
             state_list.append(None)
-            geo_list.append(geo_entry)
+            lat_list.append(None)
+            long_list.append(None)
             continue
 
         # the city and state should be known now
@@ -192,14 +190,14 @@ async def update():
         if row.empty:
             pass
         else:
-            geo_entry['lat'] = row['lat'][0]
-            geo_entry['long'] = row['lng'][0]
-        geo_list.append(geo_entry)
+            lat_list.append(row['lat'][0])
+            long_list.append(row['lng'][0])
 
     # loop ends, add cities and states onto dataframe
     df['city'] = city_list
     df['state'] = state_list
-    df['geocoding'] = geo_list
+    df['lat'] = lat_list
+    df['long'] = long_list
 
     # drop any columns with null entries for location
     df = df.dropna()
@@ -209,17 +207,17 @@ async def update():
     # cleanup to match 846 api
     def listify(text):
         return [text]
-    df['links'] = df['url'].apply(listify)
-    df['description'] = df['text']
+    df['src'] = df['url'].apply(listify)
+    df['desc'] = df['text']
     df = df.drop(columns=['tokens', 'text'])
     df = df[[
         'id', 'state', 'city',
-        'date', 'title', 'description',
-        'links', 'geocoding'
+        'date', 'title', 'desc',
+        'src', 'lat', 'long'
     ]]
 
     # save the file to a local csv
-    df.to_csv(backlog_path, index=False)
+    df.to_csv(backlog_path, index=False, )
     return HTTPException(
         200,
         "Backlog Updated at %s with %s entries" % (datetime.now(), df.shape[0])
