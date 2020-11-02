@@ -66,9 +66,9 @@ load_dotenv()
 
 ### Rename the following to modify the name/description/etc seen on the FastAPI documentation page 
 app = FastAPI(
-    title='Labs 27 Human Rights First-C DS API',
+    title='Labs 28 Human Rights First- Team-D DS API',
     description='Returns incident data from a pool of datasets run through a machine learning model.',
-    version='0.5',
+    version='0.1',
     docs_url='/',
 )
 

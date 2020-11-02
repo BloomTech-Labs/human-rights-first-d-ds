@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "danielbensonpoe/dslabs27hrfc",
+    "Name": "robdbennett/dslabs28hrfc",
     "Update": "true"
   },
   "Ports": [
