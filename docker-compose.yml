@@ -8,3 +8,4 @@ services:
       - ./project:/usr/src/app
     ports:
       - 8000:8000
+      - 80:8000
