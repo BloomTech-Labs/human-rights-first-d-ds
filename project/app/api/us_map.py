@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-df = pd.read_csv('', index_col=[0])
+df = pd.read_csv('https://raw.githubusercontent.com/Lambda-School-Labs/human-rights-first-d-ds/beta/project/app/api/final.csv', index_col=[0])
 def map_function(df, start_date, end_date, sort_by:str= "Armed/Unarmed"):
     # Selection of timeframes
     df = df.copy()
@@ -60,4 +60,7 @@ async def us_map(item: Input):
 
     Replace the placeholder docstring and fake predictions with your own model.
     """
-    return map_function(df, start_date, end_date, "Demographic")
+    start_date = item.start_date
+    end_date = item.end_date
+    sort_by = item.sort_by
+    return map_function(df, start_date, end_date, sort_by)
