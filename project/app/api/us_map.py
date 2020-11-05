@@ -5,7 +5,11 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-df = pd.read_csv('', index_col=[0])
+
+
+df = pd.read_csv('https://raw.githubusercontent.com/Lambda-School-Labs/human-rights-first-d-ds/beta/project/app/api/final.csv', index_col=[0])
+
+## Functions
 def map_function(df, start_date, end_date, sort_by:str= "Armed/Unarmed"):
     # Selection of timeframes
     df = df.copy()
@@ -32,6 +36,7 @@ def map_function(df, start_date, end_date, sort_by:str= "Armed/Unarmed"):
                       mapbox_zoom=3, mapbox_center = {"lat": 37.0902, "lon": -95.7129})
     return fig.to_json()
 
+
 router = APIRouter()
 
 class Input(BaseModel):
@@ -39,25 +44,25 @@ class Input(BaseModel):
     start_date: str
     end_date: str
     sort_by: str
+
 @router.post('/us_map')
 async def us_map(item: Input):
     """
     ### Request Body
-    = "start_date" : string 'yy-mm-dd' format.
-    = "end_date" : string 'yy-mm-dd' format.
-    - "sort_by: string this will determing how the
-    lengend will sort data default option:
-        -armed/unarmed
-    possible options:
-        "Demographic",
-        "Victim's gender",
-
+    ---
+    - `start_date` : string 'yy-mm-dd' format.
+    - `end_date` : string 'yy-mm-dd' format.
+    - `sort_by`: string
+       - "Armed/Unarmed"
+       - "Demographic",
+       - "Victim's gender",
+       - "Armed/Unarmed"
 
     ### Response
-    - `prediction`: boolean, at random
-    - `predict_proba`: float between 0.5 and 1.0, 
-    representing the predicted class's probability
-
-    Replace the placeholder docstring and fake predictions with your own model.
+    ---
+    Should return JSON to be converted in to Plotly graph_objects.
     """
-    return map_function(df, start_date, end_date, "Demographic")
+    start_date = item.start_date
+    end_date = item.end_date
+    sort_by = item.sort_by
+    return map_function(df, start_date, end_date, sort_by)

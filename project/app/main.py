@@ -5,7 +5,7 @@ import uvicorn
 from app.api import predict, viz, us_map
 
 app = FastAPI(
-    title='HFS-TEAM-D-Lab28 DS API',
+    title='HRF-TEAM-D-Lab28 DS API',
     description='The ultimate api for Data Visualization',
     version='0.1',
     docs_url='/',
