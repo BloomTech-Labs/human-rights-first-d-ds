@@ -7,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-df = pd.read_csv('https://raw.githubusercontent.com/Lambda-School-Labs/human-rights-first-d-ds/beta/project/app/api/final.csv', index_col=[0])
+df = pd.read_csv('https://raw.githubusercontent.com/popkdodge/Dataset-Holder/main/final.csv', index_col=[0])
 
 ## Functions
 def map_function(df, start_date, end_date, sort_by:str= "Armed/Unarmed"):
