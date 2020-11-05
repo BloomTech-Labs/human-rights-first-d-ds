@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from app.api import predict, viz, us_map, us_bar
+from app.api import predict, viz, us_map, us_bar, us_demo_pie
 
 app = FastAPI(
     title='HRF-TEAM-D-Lab28 DS API',
