@@ -91,4 +91,4 @@ async def us_pie_vic(item: Input):
     """
 
     """
-    return pie_charts_vic(df, item**)
+    return pie_charts_vic(df, item.start_date, item.end_date, item.group_by, item.sort_by)
