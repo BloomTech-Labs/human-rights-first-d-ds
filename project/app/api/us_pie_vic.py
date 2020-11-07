@@ -8,7 +8,7 @@ import json
 
 #loading csv in to Dataframes
 df = pd.read_csv("https://raw.githubusercontent.com/popkdodge/Dataset-Holder/main/final.csv" ,index_col=[0])
-
+asc= True
 ## Helper functions:
 def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by):
     # Selection of timeframes
