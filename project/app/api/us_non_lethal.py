@@ -21,6 +21,12 @@ def recent_pb(link, num_o_events):
                 'Link24']
   df = df[['state', 'edit_at', 'city', 'name', 'date', 'date_text', 
            'id', 'Link1', 'Link2', 'Link3']]
+  def anchor_tag(url):
+    return f'<a href="{url}">{url}</a'
+  df['Link1'] = df['Link1'].apply(anchor_tag)
+  df['Link2'] = df['Link2'].apply(anchor_tag)
+  df['Link3'] = df['Link3'].apply(anchor_tag)
+  df['edit_at'] = df['edit_at'].apply(anchor_tag)
   fig = go.Figure(data=[go.Table(header= dict(values=list(df.columns), 
                                               fill_color='paleturquoise', 
                                               align='left'),
