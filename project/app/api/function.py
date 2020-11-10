@@ -1,5 +1,6 @@
 import pandas as pd 
-import numpy as np 
+import numpy as np
+
 
 def map_function(df, start_date, end_date, sort_by:str= "Armed/Unarmed"):
     # Selection of timeframes
@@ -26,3 +27,4 @@ def map_function(df, start_date, end_date, sort_by:str= "Armed/Unarmed"):
     fig.update_layout(mapbox_style="open-street-map",
                       mapbox_zoom=3, mapbox_center = {"lat": 37.0902, "lon": -95.7129})
     return fig.to_json()
+
