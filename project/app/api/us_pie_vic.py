@@ -8,9 +8,9 @@ import json
 
 #loading csv in to Dataframes
 df = pd.read_csv("https://raw.githubusercontent.com/popkdodge/Dataset-Holder/main/final.csv" ,index_col=[0])
-
+asc= True
 ## Helper functions:
-def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by):
+def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by, asc):
     # Selection of timeframes
     df = df.copy()
     mask =  (df['Date of Incident (month/day/year)'] > start_date) & ( df['Date of Incident (month/day/year)'] <= end_date)
@@ -74,7 +74,7 @@ def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by):
                     color="RebeccaPurple"))
         except:
             return {"Error":"Invalid States Inputs"}
-        return fig.show()
+        return fig.to_json()
     return "No Selection or invalid inputs"
 
 router = APIRouter()
@@ -91,4 +91,9 @@ async def us_pie_vic(item: Input):
     """
 
     """
-    return pie_charts_vic(df, item) #item** gives a syntax error. Removed for now.
+    start_date = item.start_date
+    end_date = item.end_date
+    group_by = item.group_by
+    sort_by = item.sort_by
+    asc=True
+    return pie_charts_vic(df, start_date, end_date, group_by, sort_by, asc)
