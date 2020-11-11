@@ -5,10 +5,17 @@ import pandas as pd
 import json
 import requests
 from pydantic import BaseModel, Field, validator
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+import geopy.geocoders
+import plotly.graph_objects as go
+import plotly.express as px
+import random
+import os
 
 link = 'https://raw.githubusercontent.com/2020PB/police-brutality/data_build/all-locations.csv'
 
-def recent_pb(link, num_o_events):
+def recent_pb(link, num_o_events=30):
   df = pd.read_csv(link)
   df = df.sort_values(by='date', ascending=False).head(num_o_events)
   df.columns = ['state', 'edit_at', 'city', 'name', 'date', 'date_text', 
@@ -18,26 +25,47 @@ def recent_pb(link, num_o_events):
                 'Link18', 'Link19', 'Link20', 'Link21', 'Link22', 'Link23', 
                 'Link24']
   df = df[['state', 'edit_at', 'city', 'name', 'date', 'date_text', 
-           'id', 'Link1', 'Link2', 'Link3']]
+           'id', 'Link1']]
   def anchor_tag(url):
     return f'<a href="{url}">{url}</a'
   df['Link1'] = df['Link1'].apply(anchor_tag)
-  df['Link2'] = df['Link2'].apply(anchor_tag)
-  df['Link3'] = df['Link3'].apply(anchor_tag)
   df['edit_at'] = df['edit_at'].apply(anchor_tag)
-  fig = go.Figure(data=[go.Table(header= dict(values=list(df.columns), 
-                                              fill_color='paleturquoise', 
-                                              align='left'),
-                                 cells = dict(values=[df.state, df.edit_at, 
-                                                      df.city, df.name, df.date, 
-                                                      df.date_text, df.id, df.Link1,
-                                                      df.Link2, df.Link3],
-                                              fill_color='lavender',
-                                              align='left'))
-  ])
-  result = df.to_json()
-  parsed = json.loads(result)
-  answers = json.dumps(parsed)
+  df['location'] = df['city'] + ", " + df['state']
+  geopy.geocoders.options.default_user_agent = "PlaceFinder"
+  geolocator = Nominatim()
+  locator = Nominatim(user_agent="PlaceFinder")
+  geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1/20)
+  df['geocode'] = df['location'].apply(geocode)
+  df['point'] = df['geocode'].apply(lambda loc: tuple(loc.point) if loc else None)
+  df['point'] = df.point.astype(str)
+  df.point = df.point.str.rstrip(")")
+  df.point = df.point.str.lstrip("(")
+  df.point.dropna(inplace=True)
+  new = df.point.str.split(",", expand=True)
+  df['lon'] = new[0]
+  df['lat'] = new[1]
+  df['lon'] = df.lon.astype(float)
+  df['lat'] = df.lat.astype(float)
+  df = df[['location', 'name', 'date', 'id', 'Link1', 'lon', 'lat']]
+  def randomize(flt):
+    x = flt + (round(0.0001 * random.randrange(0,999), 6))
+    return x
+  df['lat'] = df['lat'].apply(randomize)
+  df['lon'] = df['lon'].apply(randomize)
+  mapbox_access_token = 'pk.eyJ1IjoicG9wa2RvZGdlIiwiYSI6ImNrZDdvZDFtbDAwNmwycW9xazQycWpldTYifQ.33ELrqLko1a0dHHEkSsxNw'
+  px.set_mapbox_access_token(mapbox_access_token)
+  fig = px.scatter_mapbox(df,
+                        lat=df.lon,
+                        lon=df.lat,
+                        zoom=1,
+                        hover_name= "name",
+                        hover_data = ['Link1'],
+                        color="date",
+                        title=f"Recent Acts of Police Force"
+                       )
+  fig.update_layout(mapbox_style="open-street-map",
+                  mapbox_zoom=3, mapbox_center = {"lat": 37.0902, "lon": -95.7129})
+
   return fig.to_json()
 
 router = APIRouter()
