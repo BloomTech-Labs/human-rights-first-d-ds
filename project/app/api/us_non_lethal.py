@@ -33,7 +33,6 @@ def recent_pb(link, num_o_events=30):
   df['location'] = df['city'] + ", " + df['state']
   geopy.geocoders.options.default_user_agent = "PlaceFinder"
   geolocator = Nominatim()
-  locator = Nominatim(user_agent="PlaceFinder")
   geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1/20)
   df['geocode'] = df['location'].apply(geocode)
   df['point'] = df['geocode'].apply(lambda loc: tuple(loc.point) if loc else None)
