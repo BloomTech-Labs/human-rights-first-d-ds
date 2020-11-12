@@ -22,7 +22,7 @@ def demographic_pie(df, user_input):
                 "Pacific Islander Population": "#FFA15A",
                 "White Population":"#19D3F3",
                 "Other Population": "#FF6692"}
-                 , title=f"Demographic of {user_input}"))
+                 , title=f"Demographic of {user_input}")
     return fig.to_json()
 
 router = APIRouter()
