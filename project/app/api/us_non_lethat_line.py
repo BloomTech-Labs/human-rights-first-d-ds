@@ -18,7 +18,7 @@ def line_chart():
                 y="events",
                 title='Events of police violence',
                 color_discrete_sequence=["red", "green", "blue", "goldenrod", "magenta"])
-    return fig.to_csv()
+    return fig.to_json()
 router = APIRouter()
 
 @router.get("/us_non_lethal_line")
