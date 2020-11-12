@@ -24,6 +24,8 @@ def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by, asc):
             fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',
                                         insidetextorientation='radial'
                                         )])
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
             fig.update_layout(
                 title=f"Percent of {sort_by}",
                 xaxis_title="X Axis Title",
@@ -44,6 +46,8 @@ def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by, asc):
             fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',
                                         insidetextorientation='radial',
                                         )])
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
             fig.update_layout(
                 title=f"Percent of {sort_by}",
                 xaxis_title="X Axis Title",
@@ -64,6 +68,8 @@ def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by, asc):
             fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',
                                         insidetextorientation='radial'
                                         )]) 
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
             fig.update_layout(
                 title=f"Percent of {sort_by}",
                 xaxis_title="X Axis Title",

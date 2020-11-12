@@ -62,6 +62,8 @@ def recent_pb(link, num_o_events=30):
                         color="date",
                         title=f"Recent Acts of Police Force"
                        )
+  fig.update_yaxes(automargin=True)
+  fig.update_xaxes(automargin=True)
   fig.update_layout(mapbox_style="open-street-map",
                   mapbox_zoom=3, mapbox_center = {"lat": 37.0902, "lon": -95.7129})
 

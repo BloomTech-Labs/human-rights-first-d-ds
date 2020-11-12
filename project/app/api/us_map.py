@@ -33,6 +33,8 @@ def map_function(df, start_date, end_date, sort_by:str= "Armed/Unarmed"):
                                 color = color,
                                 title=f"Police Shooting Between {start_date} and {end_date}"
                             )
+        fig.update_yaxes(automargin=True)
+        fig.update_xaxes(automargin=True)
     except:
         {"Error":"Invalid User Inputs"}
     fig.update_layout(mapbox_style="open-street-map",
