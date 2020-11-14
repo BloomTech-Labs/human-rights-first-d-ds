@@ -101,7 +101,7 @@ async def us_bar(item: Input):
        - {"States":["GA","FL","SC","CA","PA"]}
        - {'National':None}
        - {"Zipcode": [77414.0, 34614.0]}
-       - {"City": ["Atlanta,GA"]}
+       - {"City": ["Atlanta, GA"]}
     - `asc` : True/False
     ### Response
     ---
