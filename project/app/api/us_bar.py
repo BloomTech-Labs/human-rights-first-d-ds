@@ -68,7 +68,7 @@ def bar_incident(state_pop, df, start_date:str, end_date:str, groupby,asc=True):
             return {"Error": "No incident for the selected zipcode"}
         return fig.to_json()  
     if "City" in groupby:
-        test_df = df.loc[df["CityState"].isin(groupby["City"])]
+        test_df = df.loc[df["City_State"].isin(groupby["City"])]
         test_df = test_df['CityState'].value_counts().sort_values(ascending=asc).rename_axis('CityState').reset_index(name='counts')
         try:
             fig = px.bar(test_df, x="CityState", y="counts", title="Number of People killed by police in the selected City", color="CityState")

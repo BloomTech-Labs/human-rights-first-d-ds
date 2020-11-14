@@ -55,12 +55,12 @@ async def us_map(item: Input):
     """
     ### Request Body
     ---
-    - `start_date` : string 'yy-mm-dd' format.
-    - `end_date` : string 'yy-mm-dd' format.
+    - `start_date` : string 'yyyy-mm-dd' format.
+    - `end_date` : string 'yyyy-mm-dd' format.
     - `sort_by`: string
        - "Armed/Unarmed"
        - "Demographic",
-       - "Victim's gender",
+       - "Gender",
        - "Armed/Unarmed"
 
     ### Response

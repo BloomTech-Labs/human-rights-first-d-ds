@@ -113,7 +113,15 @@ class Input(BaseModel):
 @router.post("/us_pie_vic")
 async def us_pie_vic(item: Input):
     """
-
+start_date : string 'yyyy-mm-dd' format.
+end_date : string 'yyyy-mm-dd' format.
+group_by: string
+{"States":["GA","FL","SC","CA","PA"]}
+{'National':None}
+{"Zipcode": [77414.0, 34614.0]}
+{"City": ["Atlanta,GA"]}
+sort_by:
+    "
     """
     start_date = item.start_date
     end_date = item.end_date
