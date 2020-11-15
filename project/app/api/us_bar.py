@@ -102,7 +102,7 @@ async def us_bar(item: Input):
        - {'National':None}
        - {"Zipcode": [77414.0, 34614.0]}
        - {"City": ["Atlanta, GA"]}
-    - `asc` : True/False
+       - `asc` : True/False
     ### Response
     ---
     Should return JSON to be converted in to Plotly graph_objects.
