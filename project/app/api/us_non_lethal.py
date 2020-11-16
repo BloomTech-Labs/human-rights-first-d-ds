@@ -1,5 +1,3 @@
-from sqlalchemy import create_engine, Table, Text, Column, String, MetaData, DateTime
-import psycopg2
 from fastapi import APIRouter, HTTPException
 import plotly.graph_objects as go
 import datetime
