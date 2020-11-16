@@ -12,7 +12,17 @@ df = pd.read_csv('https://raw.githubusercontent.com/popkdodge/Dataset-Holder/mai
 
 ## Helper functions:
 def demographic_pie(df, user_input):
-    fig = px.pie(df, values=user_input, names='Demographics', color_discrete_sequence=px.colors.qualitative.D3, title=f"Demographic of {user_input}")
+    fig = px.pie(df, values=user_input, names='Demographics', 
+                 color="Demographics",
+                 color_discrete_map={
+                "Black Population": "#636EFA",
+                "Hispanic Population": "#EF553B",
+                "Native American Population": "#00CC96",
+                "Asian Population": "#AB63FA",
+                "Pacific Islander Population": "#FFA15A",
+                "White Population":"#19D3F3",
+                "Other Population": "#FF6692"}
+                 , title=f"Demographic of {user_input}")
     return fig.to_json()
 
 router = APIRouter()

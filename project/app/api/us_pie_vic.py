@@ -21,9 +21,17 @@ def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by, asc):
         labels = df[sort_by]
         values = df["Percentage"]
         try:
-            fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',
-                                        insidetextorientation='radial'
-                                        )])
+            fig = px.pie(df, values=values, names= labels, color=labels,
+                         color_discrete_map={
+                "Black": "#636EFA",
+                "Hispanic": "#EF553B",
+                "Native American": "#00CC96",
+                "Asian": "#AB63FA",
+                "Pacific Islander": "#FFA15A",
+                "White":"#19D3F3",
+                "Other": "#FF6692"})
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
             fig.update_layout(
                 title=f"Percent of {sort_by}",
                 xaxis_title="X Axis Title",
@@ -41,9 +49,17 @@ def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by, asc):
         labels = df[sort_by]
         values = df["Percentage"]
         try:
-            fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',
-                                        insidetextorientation='radial',
-                                        )])
+            fig = px.pie(df, values=values, names= labels, color=labels,
+                         color_discrete_map={
+                "Black": "#636EFA",
+                "Hispanic": "#EF553B",
+                "Native American": "#00CC96",
+                "Asian": "#AB63FA",
+                "Pacific Islander": "#FFA15A",
+                "White":"#19D3F3",
+                "Other": "#FF6692"})
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
             fig.update_layout(
                 title=f"Percent of {sort_by}",
                 xaxis_title="X Axis Title",
@@ -60,10 +76,18 @@ def pie_charts_vic(df, start_date:str, end_date:str, groupby, sort_by, asc):
         df = df[sort_by].value_counts(10).sort_values(ascending=asc).rename_axis(sort_by).reset_index(name='Percentage')
         labels = df[sort_by]
         values = df["Percentage"]
-        try: 
-            fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',
-                                        insidetextorientation='radial'
-                                        )]) 
+        try:
+            fig = px.pie(df, values=values, names= labels, color=labels,
+                         color_discrete_map={
+                "Black": "#636EFA",
+                "Hispanic": "#EF553B",
+                "Native American": "#00CC96",
+                "Asian": "#AB63FA",
+                "Pacific Islander": "#FFA15A",
+                "White":"#19D3F3",
+                "Other": "#FF6692"})
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
             fig.update_layout(
                 title=f"Percent of {sort_by}",
                 xaxis_title="X Axis Title",
@@ -89,7 +113,16 @@ class Input(BaseModel):
 @router.post("/us_pie_vic")
 async def us_pie_vic(item: Input):
     """
-
+start_date : string 'yyyy-mm-dd' format.
+end_date : string 'yyyy-mm-dd' format.
+group_by: string
+{"States":["GA","FL","SC","CA","PA"]}
+{'National':None}
+{"Zipcode": [77414.0, 34614.0]}
+{"City": ["Atlanta,GA"]}
+sort_by: string
+    
+    
     """
     start_date = item.start_date
     end_date = item.end_date

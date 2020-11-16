@@ -35,6 +35,8 @@ def bar_incident(state_pop, df, start_date:str, end_date:str, groupby,asc=True):
         fin = fin.sort_values(by="count/popPermillions")
         try:
             fig = px.bar(fin, x="State", y="count/popPermillions", title="Number of People killed by police in the Selected States", color="State")
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
         except:
             return {"Error": "Invalid inputs."}
         return fig.to_json()
@@ -48,6 +50,8 @@ def bar_incident(state_pop, df, start_date:str, end_date:str, groupby,asc=True):
         fin = fin.sort_values(by="count/popPermillions")
         try:
             fig = px.bar(fin, x="State", y="count/popPermillions", title="Number of People killed by police in the Selected States", color="State")
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
         except:
             return {"Error": "No incident for the selected states"}
         return fig.to_json()          
@@ -58,14 +62,18 @@ def bar_incident(state_pop, df, start_date:str, end_date:str, groupby,asc=True):
         test_df['Zipcode'] = test_df["Zipcode"].astype(str)
         try:
             fig = px.bar(test_df, x="Zipcode", y="counts", title="Number of People killed by police in the Zipcode", color="Zipcode")
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
         except:
             return {"Error": "No incident for the selected zipcode"}
         return fig.to_json()  
     if "City" in groupby:
-        test_df = df.loc[df["CityState"].isin(groupby["City"])]
-        test_df = test_df['CityState'].value_counts().sort_values(ascending=asc).rename_axis('CityState').reset_index(name='counts')
+        test_df = df.loc[df["City_State"].isin(groupby["City"])]
+        test_df = test_df['City_State'].value_counts().sort_values(ascending=asc).rename_axis('CityState').reset_index(name='counts')
         try:
             fig = px.bar(test_df, x="CityState", y="counts", title="Number of People killed by police in the selected City", color="CityState")
+            fig.update_yaxes(automargin=True)
+            fig.update_xaxes(automargin=True)
         except:
             return {"Error": "No incident for the selected City"}
         return fig.to_json()    
@@ -93,8 +101,8 @@ async def us_bar(item: Input):
        - {"States":["GA","FL","SC","CA","PA"]}
        - {'National':None}
        - {"Zipcode": [77414.0, 34614.0]}
-       - {"City": ["Atlanta,GA"]}
-    - `asc` : True/False
+       - {"City": ["Atlanta, GA"]}
+       - `asc` : True/False
     ### Response
     ---
     Should return JSON to be converted in to Plotly graph_objects.
