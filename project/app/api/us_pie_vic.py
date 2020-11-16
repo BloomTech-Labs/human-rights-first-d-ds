@@ -120,8 +120,9 @@ group_by: string
 {'National':None}
 {"Zipcode": [77414.0, 34614.0]}
 {"City": ["Atlanta,GA"]}
-sort_by:
-    "
+sort_by: string
+    
+    
     """
     start_date = item.start_date
     end_date = item.end_date
