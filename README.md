@@ -2,7 +2,9 @@
 
 ## Description
 We were approached to undertake this project by Human Rights First, a non-profit, nonpartisan organization dedicated to fighting for human rights and race equality. They have been working diligently for over 40 years, with a strong presence across the country, from Washington D.C. and Los Angeles. They have been on the forefront of this struggle for a long time, and they are very good at what they do.
+
 The purpose of this app is to better track and report acts of police use of force. There are wild inconsistencies regarding how these acts are reported, and the information is thin no matter where you look. Using various APIs and datasets, we pooled and shaped these sources and rendered them onto an easily navigated map of the US as well as multiple graphs pointing out discrepancies. Each datapoint on the map is clickable and will give the metrics for what it represents. The goal was to have a single source of truth on this matter.
+
 Moving forward, the app could benefit from more social media API data, and possibly an NLP model to assess this data to find relevant incidents.
 
 If we do a video, we should add it here.
@@ -20,25 +22,34 @@ If we do a video, we should add it here.
 
 ## Deployed Product
 - Front-End Deployment- This is the user version for the current product deployment.
+
 https://d-fe.humanrightsfirst.dev/
 - Back-End App- This is the back end app that pulls from the DS API and wires into the front-end. However, there isn't a splash page.
+
 https://hrf-d-api.herokuapp.com/
 - Data-Science API- This is the API that pulls from the various data sources, cleans/shapes the data, and reports various visualizations.
+
 http://hrf-ds16.eba-fmbjvhg4.us-east-1.elasticbeanstalk.com/#/
 
 ## Linked Repos
 - Front-End Repo- This repo contains all of the documentation and files for the front end deployment
+
 https://github.com/Lambda-School-Labs/human-rights-first-d-fe
+
 - Back-End Repo- This repo contains all of the documentation and files for the back end deployment
+
 https://github.com/Lambda-School-Labs/human-rights-first-d-be
+
 - Data-Science Repo- This repo contains all of the documentation and files for the data science api deployment
+
 https://github.com/Lambda-School-Labs/human-rights-first-d-ds
+
 
 ## Getting Started (DS)
 Our team inherited several notebooks along with a partially functional DS API. While things were wire correctly, some of the data displayed was 'dummy'. There was a NLP model that wasn't properly pickled. The DS API also was theoretically wired with the NLP model, but it wasn't reporting anything beyond the base scaffolding. The primary endpoint that functioned was getdata.py. There were also a few mis-wired APIs- the PRAW Reddit API for instance was buggy so that it could only pull a single instance rather than 100 or 1000. This difficulty was further complicated when the API did nothing with them anyway, so there was no way to have the end user update the data/database.
 While there was a fair amount of documentation within the body of the app files, the README and layout was lackluster at best.
 
-All historical documentation and artifacts can be found in the labs27 labeled folders.
+All historical documentation and artifacts can be found in the labs27 labeled folders, or on [this repo](https://github.com/Lambda-School-Labs/Labs25-Human_Rights_First-TeamC-DS).
 
 With these items in hand, we were instructed to follow the Product Vision Document to create a better product, found [here](https://www.notion.so/Human-Rights-First-Roadmap-Labs-28-4725bc357588498587902fed9d9b78c5)
 
@@ -54,21 +65,36 @@ Ryan Herr's guide can be found [here](https://docs.labs.lambdaschool.com/data-sc
 
 ## Tech Stack Used (DS)
 fastapi==0.61.1
+
 pandas==1.1.3
+
 plotly==4.12.0
+
 pytest==6.1.1
+
 requests==2.24.0
+
 uvicorn==0.12.2
+
 geopy==2.0.0
+
 geopandas==0.8.1
 
+
 Optional for historical use-
+
 praw==7.1.0
+
 python-dotenv==0.14.0
+
 beautifulsoup4==4.9.1
+
 scikit-learn==0.23.2
+
 spacy==2.3.2
+
 newspaper3k==0.2.8
+
 fastapi-utils==0.2.1
 
 Within the core application, you will need FastAPI, Pandas, Plotly, Uvicorn, Geopy and Geopandas. Depending on how you structure you own API interface, you may require requests as well.
@@ -102,9 +128,14 @@ The flow for visualizations and descriptions between the user and the back end a
 ![FE-Wire](/screenshots/Front-End-Wire-Frame.JPG)
 
 The base architecture for the Data-Science API is displayed below.
+
 ![DS-Wire](/screenshots/DS-Wire-Frame.JPG)
 
-- Describe the file hierarchy and where to find things (BE, FE, or DS specific)
+Within the Repo, all files related to the app are within the Project folder. Our notebooks are in the notebook folder, which is where we tested code, APIs, and visualizations. 
+
+The original design was to pull data from various sources, clean and store it in a database. Then pull for modeling, visualizations and push it to the back end for front end deployment. Due to time constraints, we didn't deploy a model or database, but explored all of our options listed in the primary architecture image shown above. 
+
+The deployed app pulls data from two api sources- however, we truncated this step by doing the geocoding separately and storing that file in the repo to ease up on the front-end. They had crashing issues when we were pulling it live. 
 
 ## Updates To Repo in Labs 28 (DS)
 A variety of files were added in the project/app/api folder to allow the DS team to generate the graphs rather than the front-end. US_bar, US_Demo_pie, US_map, US_Non_lethal and so forth relate directly to end points we generated for back/front end use. 
@@ -144,13 +175,17 @@ top_x_list - This returns the highest frequency of incidents filtered by Police 
 * AWS Database to store cleaned data or collected social media postings. This wasn't necessary with our build given the relatively small datasets, but would be necessary for any widespread API useage.
 
 Other Links-
+
 [Police_Shooting_Prediction_APP](https://github.com/RobDBennett/DS-Unit-2-Build-Week)
 
 [Rob's Production Blog](http://robdbennett.com/2020-11-20-Tracking-Police-Use-Of-Force/)
 
 ## Support (DS)
 For advise understanding this project, questions about the code, or concerns about our approach, please contact the following-
-| [Rob Bennett](https://github.com/RobDBennett) | [Sasana Kongjareon](https://github.com/popkdodge) |
+
+[Rob Bennett](https://github.com/RobDBennett) 
+
+[Sasana Kongjareon](https://github.com/popkdodge)
 
 All necessary information to send us messages should be included in the Contributor's section of this ReadMe.
 
